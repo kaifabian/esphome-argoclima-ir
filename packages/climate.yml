@@ -11,6 +11,39 @@ climate:
     icon: mdi:air-conditioner
     sensor: current_temperature
     transmitter_id: ir_transmitter
+    
+    on_state:
+      - lambda: |-
+          // 1. Synchronize Fan Mode
+          if (id(ac).fan_mode.has_value()) {
+            std::string fan_str = "";
+            switch(id(ac).fan_mode.value()) {
+              case climate::CLIMATE_FAN_AUTO: fan_str = "Auto"; break;
+              case climate::CLIMATE_FAN_LOW: fan_str = "Low"; break;
+              case climate::CLIMATE_FAN_MEDIUM: fan_str = "Medium"; break;
+              case climate::CLIMATE_FAN_HIGH: fan_str = "High"; break;
+              default: fan_str = "Auto"; break;
+            }
+            // Only publish if the state is actually different
+            if (fan_str != "" && id(argo_fan_mode).state != fan_str) {
+              id(argo_fan_mode).publish_state(fan_str);
+            }
+          }
+          
+          // 2. Synchronize Preset Mode
+          if (id(ac).preset.has_value()) {
+            std::string preset_str = "";
+            switch(id(ac).preset.value()) {
+              case climate::CLIMATE_PRESET_NONE: preset_str = "None"; break;
+              case climate::CLIMATE_PRESET_BOOST: preset_str = "Boost"; break;
+              case climate::CLIMATE_PRESET_ECO: preset_str = "Eco"; break;
+              case climate::CLIMATE_PRESET_SLEEP: preset_str = "Sleep"; break;
+              default: preset_str = "None"; break;
+            }
+            if (preset_str != "" && id(argo_preset_mode).state != preset_str) {
+              id(argo_preset_mode).publish_state(preset_str);
+            }
+          }
 
 switch:
   - platform: template

@@ -6,6 +6,7 @@ substitutions:
 packages:
   board: !include board.yml
   climate: !include climate.yml
+  climate_ui: !include climate_ui.yml
   common: !include common.yml
   external_components: !include external_components.yml
 

@@ -1,0 +1,39 @@
+select:
+  # Fan Mode Proxy
+  - platform: template
+    name: "Fan Mode"
+    id: argo_fan_mode
+    optimistic: true
+    options:
+      - "Auto"
+      - "Low"
+      - "Medium"
+      - "High"
+    on_value:
+      - climate.control:
+          id: ac
+          fan_mode: !lambda |-
+            if (x == "Auto") return climate::CLIMATE_FAN_AUTO;
+            if (x == "Low") return climate::CLIMATE_FAN_LOW;
+            if (x == "Medium") return climate::CLIMATE_FAN_MEDIUM;
+            if (x == "High") return climate::CLIMATE_FAN_HIGH;
+            return climate::CLIMATE_FAN_AUTO;
+  # Preset Proxy
+  - platform: template
+    name: "Preset Mode"
+    id: argo_preset_mode
+    optimistic: true
+    options:
+      - "None"
+      - "Boost"
+      - "Eco"
+      - "Sleep"
+    on_value:
+      - climate.control:
+          id: ac
+          preset: !lambda |-
+            if (x == "None") return climate::CLIMATE_PRESET_NONE;
+            if (x == "Boost") return climate::CLIMATE_PRESET_BOOST;
+            if (x == "Eco") return climate::CLIMATE_PRESET_ECO;
+            if (x == "Sleep") return climate::CLIMATE_PRESET_SLEEP;
+            return climate::CLIMATE_PRESET_NONE;
