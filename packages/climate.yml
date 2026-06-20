@@ -25,7 +25,7 @@ climate:
               default: fan_str = "Auto"; break;
             }
             // Only publish if the state is actually different
-            if (fan_str != "" && id(argo_fan_mode).state != fan_str) {
+            if (fan_str != "" && id(argo_fan_mode).current_option() != fan_str) {
               id(argo_fan_mode).publish_state(fan_str);
             }
           }
@@ -40,7 +40,7 @@ climate:
               case climate::CLIMATE_PRESET_SLEEP: preset_str = "Sleep"; break;
               default: preset_str = "None"; break;
             }
-            if (preset_str != "" && id(argo_preset_mode).state != preset_str) {
+            if (preset_str != "" && id(argo_preset_mode).current_option() != preset_str) {
               id(argo_preset_mode).publish_state(preset_str);
             }
           }
