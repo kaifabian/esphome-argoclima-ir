@@ -229,6 +229,7 @@ class ArgoUlisseClimate : public climate_ir::ClimateIR {
   // Setters for the additional features (e.g. for template switches)
   void set_protocol_version(ArgoProtocolVersion version) { this->protocol_version_ = version; }
   void set_channel(uint8_t channel) { this->channel_ = channel; }
+  void set_ifeel_update_interval(uint32_t interval) { this->ifeel_update_interval_ = interval; }
   void set_ifeel(bool ifeel) {
     this->ifeel_ = ifeel;
     transmit_state();
@@ -250,6 +251,7 @@ class ArgoUlisseClimate : public climate_ir::ClimateIR {
 
  protected:
   void control(const climate::ClimateCall &call) override;
+  void reset_ifeel_timer_();
   // Transmit via IR the state of this climate controller.
   int32_t last_transmit_time_{};
   void transmit_state() override;
@@ -271,6 +273,7 @@ class ArgoUlisseClimate : public climate_ir::ClimateIR {
   // config
   ArgoProtocolVersion protocol_version_{ARGO_PROTOCOL_WREM3};
   uint8_t channel_{0};
+  uint32_t ifeel_update_interval_{30000};
 
   // booleans to handle the additional features
   bool ifeel_{true};

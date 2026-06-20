@@ -25,6 +25,8 @@ void ArgoUlisseClimate::setup() {
       this->transmit_ifeel_();
     }
   });
+
+  this->reset_ifeel_timer_();
 }
 
 uint8_t ArgoUlisseClimate::calc_checksum_(const ArgoProtocolWREM3 *data,
@@ -189,12 +191,23 @@ void ArgoUlisseClimate::transmit_state_wrem2() {
   transmit.perform();
 }
 
+void ArgoUlisseClimate::reset_ifeel_timer_() {
+  if (this->ifeel_update_interval_ == 0) return;
+  this->cancel_timeout("ifeel_timer");
+  this->set_timeout("ifeel_timer", this->ifeel_update_interval_, [this]() {
+    if (this->ifeel_) {
+      this->transmit_ifeel_();
+    }
+  });
+}
+
 void ArgoUlisseClimate::transmit_ifeel_() {
   if (this->protocol_version_ == ARGO_PROTOCOL_WREM2) {
     this->transmit_ifeel_wrem2();
   } else {
     this->transmit_ifeel_wrem3();
   }
+  this->reset_ifeel_timer_();
 }
 
 void ArgoUlisseClimate::transmit_ifeel_wrem3() {
