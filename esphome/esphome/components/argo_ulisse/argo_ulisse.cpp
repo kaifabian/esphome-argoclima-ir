@@ -262,6 +262,9 @@ void ArgoUlisseClimate::transmit_ifeel_wrem2() {
   ArgoProtocolWREM2 ifeel_packet;
   memset(&ifeel_packet, 0, sizeof(ifeel_packet));
 
+  ifeel_packet.Pre1 = ARGO_WREM2_PREAMBLE1;
+  ifeel_packet.Pre2 = ARGO_WREM2_PREAMBLE2;
+
   uint8_t temp = this->sensor_temperature_();
   uint8_t check = ARGO_WREM2_SENSOR_CHECK + temp;
 
@@ -269,10 +272,6 @@ void ArgoUlisseClimate::transmit_ifeel_wrem2() {
   ifeel_packet.ifeelreport.CheckHi = check >> 5;
   ifeel_packet.ifeelreport.CheckLo = check;
   ifeel_packet.ifeelreport.Fixed = ARGO_WREM2_SENSOR_FIXED;
-
-  ifeel_packet.Post = ARGO_WREM2_POST;
-  ifeel_packet.Sum =
-      this->calc_checksum_wrem2_(&ifeel_packet, ARGO_WREM2_STATE_LENGTH);
 
   auto transmit = this->transmitter_->transmit();
   auto *data = transmit.get_data();
