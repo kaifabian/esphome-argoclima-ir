@@ -339,15 +339,15 @@ uint8_t ArgoUlisseClimate::swing_mode_() {
 uint8_t ArgoUlisseClimate::temperature_() {
   // Clamp the temperature to the valid range
   float temp_valid =
-      clamp<float>(this->target_temperature, ARGO_TEMP_MIN - ARGO_TEMP_OFFSET,
-                   ARGO_TEMP_MAX - ARGO_TEMP_OFFSET);
+      clamp<float>(this->target_temperature, ARGO_TEMP_MIN,
+                   ARGO_TEMP_MAX);
   return process_temperature_(temp_valid);
 }
 
 uint8_t ArgoUlisseClimate::sensor_temperature_() {
   float temp_valid = clamp<float>(this->current_temperature,
-                                  ARGO_SENSOR_TEMP_MIN - ARGO_TEMP_OFFSET,
-                                  ARGO_SENSOR_TEMP_MAX - ARGO_TEMP_OFFSET);
+                                  ARGO_SENSOR_TEMP_MIN,
+                                  ARGO_SENSOR_TEMP_MAX);
   return process_temperature_(temp_valid);
 }
 
